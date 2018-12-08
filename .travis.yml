@@ -5,4 +5,11 @@ jdk:
 
 script:
 - ./gradlew clean build test
-- ./gradlew :helios-benchmarks:jmh
+- ./gradlew :helios-benchmarks:jmh -PjmhInclude=helios.benchmarks.DecodingFromRaw
+- cd ..
+- git clone https://github.com/47deg/helios.git master-branch
+- cd master-branch
+- ./gradlew :helios-benchmarks:jmh -PjmhInclude=helios.benchmarks.DecodingFromRaw
+- cd ..
+- cd helios
+- ./gradlew runBenchmarksAnalyze -PbenchmarkArgs="build/reports/benchmarks.csv,../../master-branch/helios-benchmarks/build/reports/benchmarks.csv,helios.benchmarks.DecodingFromRaw.helios,100"

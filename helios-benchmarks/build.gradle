@@ -15,6 +15,8 @@ dependencies {
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.7"
     compile "com.jsoniter:jsoniter:0.9.23"
+    compile "io.arrow-kt:arrow-effects:$arrowVersion"
+    compile "io.arrow-kt:arrow-effects-instances:$arrowVersion"
 
     kapt "io.arrow-kt:arrow-annotations-processor:$arrowVersion"
     kapt project(':helios-meta-compiler')
@@ -29,4 +31,14 @@ apply plugin: 'kotlinx-serialization'
 jmh {
     resultFormat = 'csv'
     resultsFile = file('build/reports/benchmarks.csv')
+    if (project.hasProperty("jmhInclude"))
+        include = [jmhInclude]
+}
+
+task runBenchmarksAnalyze(type: JavaExec) {
+    main = 'helios.benchmarks.compare.Benchmarks'
+    if (project.hasProperty('benchmarkArgs')) {
+        args(benchmarkArgs.split(","))
+    }
+    classpath = sourceSets.main.runtimeClasspath
 }
